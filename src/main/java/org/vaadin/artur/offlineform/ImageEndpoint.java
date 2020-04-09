@@ -1,104 +1,40 @@
 package org.vaadin.artur.offlineform;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.vaadin.flow.server.connect.Endpoint;
 import com.vaadin.flow.server.connect.auth.AnonymousAllowed;
+
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 @Endpoint
 @AnonymousAllowed
 public class ImageEndpoint {
 
-    public String[] getInitialImages() {
-        return new String[] { "images/photo-1448506815208-be0c5ee976b2.jpg",
-                "images/photo-1451360582104-730beb91c66b.jpg", "images/photo-1463995439889-6cc080aaf7dd.jpg",
-                "images/photo-1478125025470-6faaedf10a6f.jpg", "images/photo-1480350376518-4575ee35bf49.jpg",
-                "images/photo-1482160020556-1e03f698acdf.jpg", "images/photo-1484842641800-6767207f4220.jpg",
-                "images/photo-1490713891696-2951ecd24740.jpg", "images/photo-1490785972325-fe9bc08360c0.jpg",
-                "images/photo-1494255271903-a638c3903394.jpg", "images/photo-1504221507732-5246c045949b.jpg",
-                "images/photo-1504596460230-b7eb6eb5c32a.jpg", "images/photo-1504888381347-d17a072a5154.jpg",
-                "images/photo-1505484128222-46ced733ba01.jpg", "images/photo-1506976785307-8732e854ad03.jpg",
-                "images/photo-1507025840014-837c1e9c8f02.jpg", "images/photo-1508770190405-366087337ec6.jpg",
-                "images/photo-1512736912-cd9db1d90b72.jpg", "images/photo-1512955633118-3bdec0a442bf.jpg",
-                "images/photo-1515449634394-7f0f1d7d6543.jpg", "images/photo-1515674982171-a9c9fc23ae5a.jpg",
-                "images/photo-1516717100004-8b2682dd9759.jpg", "images/photo-1517599652-86163851f0de.jpg",
-                "images/photo-1519370855830-34c503c41d0f.jpg", "images/photo-1520183139992-b4dfd02a5584.jpg",
-                "images/photo-1522087774106-9637587ebb35.jpg", "images/photo-1522954933197-7c2e03645642.jpg",
-                "images/photo-1523349945440-436fbc94fdde.jpg", "images/photo-1524347056892-b804ce62bf38.jpg",
-                "images/photo-1524525457897-bca9d803c895.jpg", "images/photo-1524803504179-6d7ae4d283f7.jpg",
-                "images/photo-1525296617350-d87d218737aa.jpg", "images/photo-1525973000325-4b16acd55416.jpg",
-                "images/photo-1526988729262-31c2fbb3f67d.jpg", "images/photo-1527067829737-402993088e6b.jpg",
-                "images/photo-1528399783831-8318d62d10e5.jpg", "images/photo-1530051381876-8a8a8eb0ff05.jpg",
-                "images/photo-1530543787849-128d94430c6b.jpg", "images/photo-1530731032932-d4179d417b04.jpg",
-                "images/photo-1531302871984-ca996367b319.jpg", "images/photo-1531315365-3c3d78651881.jpg",
-                "images/photo-1531359342596-6363197419ec.jpg", "images/photo-1532456745301-b2c645d8b80d.jpg",
-                "images/photo-1532607792384-110a601b26df.jpg", "images/photo-1533762229008-1980bdc88fe5.jpg",
-                "images/photo-1534859383054-3f0fef8f7fa6.jpg", "images/photo-1535376472810-5d229c65da09.jpg",
-                "images/photo-1536341058525-49bdaf39d102.jpg", "images/photo-1536913976769-23a453685bb6.jpg",
-                "images/photo-1538291323976-37dcaafccb12.jpg", "images/photo-1539126688844-14c271f70569.jpg",
-                "images/photo-1540107398-7d26f57d5ec4.jpg", "images/photo-1540227361727-9ff989df923f.jpg",
-                "images/photo-1541837395-4f5bb7f8f0f9.jpg", "images/photo-1542028081692-cde03c28a2a1.jpg",
-                "images/photo-1542407976627-76be36bb6045.jpg", "images/photo-1542459504-9e13de128bb4.jpg",
-                "images/photo-1542646010-5652de93bc83.jpg", "images/photo-1542866263-77e2cdc46889.jpg",
-                "images/photo-1546179297-f40bd5098d4b.jpg", "images/photo-1547418278-4b272dcf0dd1.jpg",
-                "images/photo-1547452409-d6027a2abb48.jpg", "images/photo-1547481857-302e8ea26f5a.jpg",
-                "images/photo-1548967186-ce5a2d0066b5.jpg", "images/photo-1549187805-d372f858201c.jpg",
-                "images/photo-1549492824-12c7cd53e0ca.jpg", "images/photo-1550506102-1aab36f2f18d.jpg",
-                "images/photo-1550684376-cafcd6096e61.jpg", "images/photo-1551478255-5bfa00d2669a.jpg",
-                "images/photo-1551958941-658e0532724a.jpg", "images/photo-1552083974-186346191183.jpg",
-                "images/photo-1553949312-1b37019c1c15.jpg", "images/photo-1554613715-273dc84d015b.jpg",
-                "images/photo-1555679427-1f6dfcce943b.jpg", "images/photo-1555679486-e341a3e7b6de.jpg",
-                "images/photo-1555787040-102294ad01d7.jpg", "images/photo-1555972694-13c981cd550c.jpg",
-                "images/photo-1557459269-82664330c1f9.jpg", "images/photo-1557464827-456078815188.jpg",
-                "images/photo-1560040980-ea5fe87f5a9e.jpg", "images/photo-1560397142-3f68b4797eac.jpg",
-                "images/photo-1560760795-288473383a63.jpg", "images/photo-1561194570-5cade0b96a8f.jpg",
-                "images/photo-1561714804-31810e4df0e5.jpg", "images/photo-1561714813-4f3b8e4c7f77.jpg",
-                "images/photo-1562362840-6985a3733d25.jpg", "images/photo-1562943030-ac2f4c278a9e.jpg",
-                "images/photo-1564089915105-db97895bdd78.jpg", "images/photo-1564132254865-639bfec4c5bf.jpg",
-                "images/photo-1565049140538-0f6b3f22f21f.jpg", "images/photo-1566158677696-6d8b13c8a42d.jpg",
-                "images/photo-1567001605689-687b337ded33.jpg", "images/photo-1567119715747-ff9c10f46115.jpg",
-                "images/photo-1567505673182-880b1e313384.jpg", "images/photo-1567719795037-1933f2ef04c6.jpg",
-                "images/photo-1568092822270-bacac1aa4d41.jpg", "images/photo-1568733873715-f9d497a47ea0.jpg",
-                "images/photo-1568826069038-f3de1448e9a1.jpg", "images/photo-1569293673783-9959d9882dac.jpg",
-                "images/photo-1569415235674-9803560cf9ee.jpg", "images/photo-1570296273328-cd16499ba1d6.jpg",
-                "images/photo-1570386060987-648a2eea4b26.jpg", "images/photo-1570598339819-b07db356695e.jpg",
-                "images/photo-1571752841071-54a3e8b6eaaf.jpg", "images/photo-1572615318862-c3e4457d2f96.jpg",
-                "images/photo-1573221566340-81bdde00e00b.jpg", "images/photo-1575446508383-9fabff7c6fef.jpg",
-                "images/photo-1575499032276-a51e58f176bb.jpg", "images/photo-1576093742342-ae7001bdc5e8.jpg",
-                "images/photo-1576165865843-9d81a4ce199a.jpg", "images/photo-1576500763533-bf5d9ba15c9f.jpg",
-                "images/photo-1576502200916-3808e07386a5.jpg", "images/photo-1576502202167-791eca35a78d.jpg",
-                "images/photo-1577398628395-4ebd1f36731b.jpg", "images/photo-1577481759281-b2e3a1e62c2b.jpg",
-                "images/photo-1578070181910-f1e514afdd08.jpg", "images/photo-1578297621423-eec069f9ef2d.jpg",
-                "images/photo-1578598506500-3d2533a4f272.jpg", "images/photo-1578735546632-9ff1f1e7518e.jpg",
-                "images/photo-1579547621113-e4bb2a19bdd6.jpg", "images/photo-1579909990663-0a8557ca9785.jpg",
-                "images/photo-1581084243124-209fc8f93cf6.jpg", "images/photo-1581242797068-e2c04e4f2ba1.jpg",
-                "images/photo-1581508525322-f5d437639ff9.jpg", "images/photo-1581699299778-ab01693a058a.jpg",
-                "images/photo-1582540807109-14560d3e7cab.jpg", "images/photo-1582721719415-672dab4c1640.jpg",
-                "images/photo-1582744902978-3f1fabfdfa7b.jpg", "images/photo-1582818617487-8a930205f923.jpg",
-                "images/photo-1583344575570-20f4aef19843.jpg", "images/photo-1583350885168-6032802c5698.jpg",
-                "images/photo-1583444112002-a2fd760e7f09.jpg", "images/photo-1583659562319-9f413b27e82e.jpg",
-                "images/photo-1583748531761-3fc26a1e77d7.jpg", "images/photo-1583748531836-b5dea61ece17.jpg",
-                "images/photo-1583846800540-9a28bf575c3b.jpg", "images/photo-1583854710609-d8d2790e4105.jpg",
-                "images/photo-1583862595688-e8195e4f1446.jpg", "images/photo-1583944214133-cb9d63b02999.jpg",
-                "images/photo-1584058878169-03e19f2429ba.jpg", "images/photo-1584140828577-933ad5f0c57f.jpg",
-                "images/photo-1584201771941-b388059bfe02.jpg", "images/photo-1584257354364-a0bd4b94d32b.jpg",
-                "images/photo-1584268212459-cdcf2008b87a.jpg", "images/photo-1584303515229-319abab5b28a.jpg",
-                "images/photo-1584303532810-a6c0dcba5bcd.jpg", "images/photo-1584322467067-3e45df888faa.jpg",
-                "images/photo-1584636633445-c4a13a3e505c.jpg", "images/photo-1584785933913-feb6e407f2a2.jpg",
-                "images/photo-1584942368913-b98dd9983c7e.jpg", "images/photo-1584968124544-d10ce10dd21f.jpg",
-                "images/photo-1584968143694-8fa8bbde5247.jpg", "images/photo-1584968153986-3f5fe523b044.jpg",
-                "images/photo-1584968163863-ce89e7a6c475.jpg", "images/photo-1584968432769-556968d0cd43.jpg",
-                "images/photo-1584970601654-d53b6cd6f698.jpg", "images/photo-1584985598389-3a36cb7aa1c4.jpg",
-                "images/photo-1584995124038-f6fe4fe869f0.jpg", "images/photo-1585133442647-f3942750d6a4.jpg",
-                "images/photo-1585235859311-e18fa3a31651.jpg", "images/photo-1585308522924-bc6f5878e2a5.jpg",
-                "images/photo-1585745540837-ec55409a515d.jpg", "images/photo-1585758853077-3214ba7d44da.jpg",
-                "images/photo-1585758874546-c593da5f29e7.jpg", "images/photo-1585758888376-4a04c200841e.jpg",
-                "images/photo-1585758907038-2e1c09d84f75.jpg", "images/photo-1585758918599-6a03f6b9ae08.jpg",
-                "images/photo-1585758953419-ecd6aec9df03.jpg", "images/photo-1585854467604-cf2080ccef31.jpg",
-                "images/photo-1586012556194-38bdc1b9ab7d.jpg", "images/photo-1586013277290-a94871df7bb0.jpg",
-                "images/photo-1586014377331-233f73675976.jpg", "images/photo-1586020435958-8298e2cb5f64.jpg",
-                "images/photo-1586073054605-132a6e7637bc.jpg", "images/photo-1586073055431-5b31161642f7.jpg",
-                "images/photo-1586073305502-5c5cc4a594bd.jpg", "images/photo-1586150895883-f3b9aca4c2f8.jpg",
-                "images/photo-1586152470140-6591facd9af1.jpg", "images/photo-1586184072411-434bd494c3c2.jpg",
+    private static List<String> images = new ArrayList<>();
+    {
+        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        try {
+            Resource[] resources = resolver.getResources("classpath*:static/**");
+            for (Resource r : resources) {
+                String path = r.getURL().getPath();
+                if (path.endsWith(".jpg")) {
+                    path = path.replaceAll(".*/static/images/photo", "images/photo");
+                    images.add(path);
+                }
+            }
 
-        };
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
+    public List<String> getInitialImages() {
+        return images;
     }
 }
