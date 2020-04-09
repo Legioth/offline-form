@@ -5,27 +5,62 @@
  * This file can be used for manual configuration. It will not be modified
  * if the flowDefaults constant exists.
  */
-const merge = require('webpack-merge');
-const flowDefaults = require('./webpack.generated.js');
+const merge = require("webpack-merge");
+const flowDefaults = require("./webpack.generated.js");
+const { GenerateSW } = require("workbox-webpack-plugin");
+const glob = require("glob");
+const crypto = require("crypto");
+const path = require("path");
 
 /**
  * To change the webpack config, add a new configuration object in
  * the merge arguments below:
  */
-module.exports = merge(flowDefaults,
-  // Override default configuration
-  // {
-  //   mode: 'development',
-  //   devtool: 'inline-source-map',
-  // },
 
-  // Add a custom plugin
-  // (install the plugin with `npm install --save-dev webpack-bundle-analyzer`)
-  // {
-  //   plugins: [
-  //     new require('webpack-bundle-analyzer').BundleAnalyzerPlugin({
-  //       analyzerMode: 'static'
-  //     })
-  //   ]
-  // },
-);
+const hash = (file) => {
+  return crypto.createHash("md5").update(Buffer.from(file)).digest("hex");
+};
+
+const include = (manifest, globPattern) => {
+  const globDirectory = "src/main/resources/static";
+
+  files = glob.sync(globPattern, {
+    cwd: globDirectory,
+    nodir: true,
+  });
+  files.forEach((file) => {
+    // Add each file with the contents hash as the revision. Without a revision, the file can never be updated.
+    manifest.push({ url: file, revision: hash(path.resolve(__dirname, file)) });
+  });
+};
+const manifestTransform = (manifestEntries, compilation) => {
+  // If anything needs to be propagated to webpack's list
+  // of compilaiton warnings, add the message here:
+  const warnings = [];
+  const manifest = manifestEntries;
+
+  include(manifest, "*.*");
+  include(manifest, "icons/**");
+
+  return { manifest, warnings };
+};
+
+module.exports = merge(flowDefaults, {
+  plugins: [
+    new GenerateSW({
+      swDest: "build/sw.js",
+      manifestTransforms: [manifestTransform],
+      maximumFileSizeToCacheInBytes: 100 * 1024 * 1024,
+      inlineWorkboxRuntime: true,
+      exclude: [/^index.html$/],
+      skipWaiting: true,
+      clientsClaim: true,
+      runtimeCaching: [
+        {
+          urlPattern: "/",
+          handler: "NetworkFirst",
+        },
+      ],
+    }),
+  ],
+});

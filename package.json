@@ -50,20 +50,21 @@
     "promise-file-reader": "^1.0.2"
   },
   "devDependencies": {
+    "awesome-typescript-loader": "5.2.1",
+    "compression-webpack-plugin": "3.1.0",
+    "copy-webpack-plugin": "5.1.1",
+    "html-webpack-plugin": "3.2.0",
+    "progress-webpack-plugin": "0.0.24",
+    "raw-loader": "4.0.0",
+    "script-ext-html-webpack-plugin": "2.1.4",
+    "terser": "4.6.7",
+    "typescript": "3.8.3",
     "webpack": "4.42.0",
+    "webpack-babel-multi-target-plugin": "2.3.3",
     "webpack-cli": "3.3.11",
     "webpack-dev-server": "3.10.3",
-    "webpack-babel-multi-target-plugin": "2.3.3",
-    "copy-webpack-plugin": "5.1.1",
     "webpack-merge": "4.2.2",
-    "raw-loader": "4.0.0",
-    "compression-webpack-plugin": "3.1.0",
-    "html-webpack-plugin": "3.2.0",
-    "script-ext-html-webpack-plugin": "2.1.4",
-    "awesome-typescript-loader": "5.2.1",
-    "typescript": "3.8.3",
-    "terser": "4.6.7",
-    "progress-webpack-plugin": "0.0.24"
+    "workbox-webpack-plugin": "^5.1.2"
   },
   "vaadinAppPackageHash": "29b4162103ca40e4c423a71278e60ec9aceb9aca2e2069778853913396be2a70",
   "vaadin": {
@@ -128,6 +129,6 @@
       "terser": "4.6.7",
       "progress-webpack-plugin": "0.0.24"
     },
-    "hash": "7101edba741f66738f3ff44691abdcba86592e31ea2219f5ac15cc03f1ec305d"
+    "hash": "a45d9f37152f7a6ea1b78500eeaefb582918f8d888873e749dbce6e4f34b250a"
   }
 }
