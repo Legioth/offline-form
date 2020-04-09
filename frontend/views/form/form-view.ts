@@ -10,44 +10,59 @@ import { getInitialImages } from "../../generated/ImageEndpoint";
 
 @customElement("form-view")
 export class FormView extends LitElement {
-  keys: IDBValidKey[] = [];
-  nextKey: number = 0;
-
-  @property({ type: Array })
   images: string[] = [];
   @property({ type: String })
   imageSrc: string = "";
 
   @property({ type: String })
   statusMessage: string = "";
+  updateTimer?: NodeJS.Timeout;
 
   async connectedCallback() {
     super.connectedCallback();
-    clear();
 
-    this.keys = await keys();
-    this.updateImages();
-    this.nextKey = this.keys.length;
+    const imageKeys = await keys();
+    this.doUpdateImages(imageKeys);
 
-    this.statusMessage = "Loading initial images from the server";
-    const urls = await getInitialImages();
+    if (imageKeys.length == 0) {
+      await this.clearAndLoadImages();
+    } else {
+      this.setLoadedStatus(imageKeys);
+    }
+  }
+  setLoadedStatus(keys: IDBValidKey[]) {
+    this.statusMessage = keys.length + " images available locally";
+  }
+
+  async loadUrls(urls: string[]) {
     let loadedUrls = 0;
-    urls.forEach(async (url) => {
-      const response = await fetch(url);
-      const data = await response.blob();
-      this.addImage(await readAsDataURL(data));
+    for (var i = 0; i < urls.length; i++) {
+      const url = urls[i];
+      await this.loadUrl(url);
       loadedUrls++;
       this.statusMessage =
-        "Loading initial images from the server " +
-        loadedUrls +
-        "/" +
-        urls.length;
-    });
+        "Loading images from the server " + loadedUrls + "/" + urls.length;
+    }
+  }
+  async loadUrl(url: string) {
+    const response = await fetch(url);
+    const data = await response.blob();
+    await this.addImage(url.replace(".*/", ""), await readAsDataURL(data));
+  }
+
+  async clearAndLoadImages() {
+    clear();
+
+    this.statusMessage = "Loading images from the server";
+    const urls = await getInitialImages();
+    await this.loadUrls(urls);
+    this.setLoadedStatus(await keys());
   }
 
   render() {
     return html`
       <div>${this.statusMessage}</div>
+      <button @click="${() => this.clearAndLoadImages()}">Re-initialize</button>
       <vaadin-upload
         @upload-before=${(e: CustomEvent) => {
           this.upload(e);
@@ -56,6 +71,7 @@ export class FormView extends LitElement {
       ></vaadin-upload>
 
       <vaadin-combo-box
+        style="width: 50%"
         @value-changed="${(e: CustomEvent) => this.showImage(e)}"
         label="Available images"
         .items=${this.images}
@@ -79,7 +95,7 @@ export class FormView extends LitElement {
     upload._notifyFileChanges(file);
 
     const data = await readAsDataURL(file);
-    await this.addImage(data);
+    await this.addImage(file.name, data);
 
     file.complete = true;
     file.held = false;
@@ -93,16 +109,22 @@ export class FormView extends LitElement {
     }, 500);
   }
 
-  async addImage(data: string) {
-    const key = "file-" + this.nextKey++;
-    set(key, data);
-    this.keys = await keys();
-    setTimeout(() => {
-      this.updateImages();
-    }, 500);
+  async addImage(name: string, data: string) {
+    const key = name;
+    await set(key, data);
+    this.updateImages();
   }
 
   updateImages() {
-    this.images = this.keys as string[];
+    if (this.updateTimer) {
+      return;
+    }
+    this.updateTimer = setTimeout(async () => {
+      this.doUpdateImages(await keys());
+      this.updateTimer = undefined;
+    }, 500);
+  }
+  doUpdateImages(keys: IDBValidKey[]) {
+    this.images = keys as string[];
   }
 }
