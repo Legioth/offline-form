@@ -45,7 +45,9 @@
     "@vaadin/vaadin-text-field": "2.5.5",
     "@vaadin/vaadin-time-picker": "2.0.7",
     "@vaadin/vaadin-upload": "4.2.2",
-    "lit-element": "^2.2.1"
+    "idb-keyval": "^3.2.0",
+    "lit-element": "^2.2.1",
+    "promise-file-reader": "^1.0.2"
   },
   "devDependencies": {
     "webpack": "4.42.0",
@@ -122,6 +124,6 @@
       "webpack-merge": "4.2.2",
       "webpack-dev-server": "3.10.3"
     },
-    "hash": "2fe9e900b5f3677029d969ec90ac5f1c6535190beca68d538df2eb4f3b6e61a7"
+    "hash": "abaa4f8de5133b6f5a24cd904b72c2a3e390274501bd0c1c37e14a6c5cd3928f"
   }
 }
