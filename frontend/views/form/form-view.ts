@@ -89,7 +89,7 @@ export class FormView extends LitElement {
   }
   async upload(e: CustomEvent<any>) {
     //@ts-ignore
-    const upload = e.path[0];
+    const upload: any = e.target;
     const file = e.detail.file;
     file.status = "processing";
     upload._notifyFileChanges(file);
