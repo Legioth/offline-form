@@ -1,5 +1,6 @@
 package org.vaadin.artur.offlineform;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -43,8 +44,8 @@ public class FormsEndpoint {
         private final String type;
         private final @Nullable String options;
 
-        public Field(String id, String name, String type, String options) {
-            this.id = id;
+        public Field(String name, String type, String options) {
+            this.id = name.toLowerCase().replaceAll("\\s", "");
             this.name = name;
             this.type = type;
             this.options = options;
@@ -101,15 +102,18 @@ public class FormsEndpoint {
 
     public FormsEndpoint() {
         Map<String, List<String>> form1Options = new HashMap<>();
-        form1Options.put("bosses", IntStream.range(0, 10000).mapToObj(i -> "Boss " + i).collect(Collectors.toList()));
-        forms.put(Integer.valueOf(1), new Form(1, "Form 1",
-                Arrays.asList(new Field("name", "Name", "text", null), new Field("boss", "Boss", "dropdown", "bosses")),
+        form1Options.put("persons", IntStream.range(0, 10000).mapToObj(i -> "Workplace person " + i).collect(Collectors.toList()));
+        List<Field> form1Fields = new ArrayList<>(Arrays.asList(new Field("Workplace location", "text", null), new Field("Accountable", "dropdown", "persons"), new Field("Inspector", "dropdown", "persons")));
+        IntStream.range(1, 100).mapToObj(number -> new Field("Generic question " + number, "yesnomaybe", null)).forEach(form1Fields::add);
+
+        forms.put(Integer.valueOf(1), new Form(1, "Workplace Inspection",
+                form1Fields,
                 form1Options));
 
         Map<String, List<String>> form2Options = new HashMap<>();
         form2Options.put("options", Arrays.asList("Yes", "No", "Maybe"));
-        forms.put(Integer.valueOf(2), new Form(2, "Form 2",
-                Arrays.asList(new Field("awesome", "Are you awesome?", "dropdown", "options")), form2Options));
+        forms.put(Integer.valueOf(2), new Form(2, "Another Inspection",
+        Arrays.asList(new Field("Is it Friday yet?", "dropdown", "options")), form2Options));
     }
 
     public List<FormInfo> getForms() {

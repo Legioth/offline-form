@@ -1,18 +1,18 @@
 import { customElement, html, LitElement, property } from "lit-element";
-import { until } from "lit-html/directives/until"
 import { keys, get, set, del, Store } from "idb-keyval";
+import { v4 as uuidv4 } from 'uuid';
 
 import * as formsEndpoint from "../../generated/FormsEndpoint";
 import FormInfo from "../../generated/org/vaadin/artur/offlineform/FormsEndpoint/FormInfo";
+import { Router } from "@vaadin/router";
 
-const formsStore = new Store('forms');
-
-const asyncIf = (condition : Promise<Boolean>, trueValue : any, falseValue : any, pendingValue : any) =>
- until(condition.then(value => value ? trueValue : falseValue), pendingValue);
+const inspectionsStore = new Store('inspections');
+const imagesStore = new Store('images');
 
 @customElement("form-list")
 export class FormList extends LitElement {
-  @property() private forms : Array<FormInfo> = [];
+  @property() private forms : FormInfo[] = [];
+  @property() private inspections : string[] = [];
 
   @property() private offline = true;
 
@@ -26,6 +26,8 @@ export class FormList extends LitElement {
     window.addEventListener("offline", this.checkOffline);
     window.addEventListener("online", this.checkOffline);
     this.checkOffline();
+
+    this.inspections = (await keys(inspectionsStore)) as string[];
   }
 
   disconnectedCallback() {
@@ -37,54 +39,61 @@ export class FormList extends LitElement {
   async goOnline() {
     this.offline = false;
 
-    this.forms = await formsEndpoint.getForms();
+    if (this.forms.length == 0) {
+      this.forms = await formsEndpoint.getForms();
+    }
   }
 
   async goOffline() {
     this.offline = true;
-
-    const ids = (await keys(formsStore)) as number[];
-    this.forms = await Promise.all(ids.map(async id => get(id, formsStore) as Promise<FormInfo>));
-  }
-
-  async availableOffline(form : FormInfo) {
-    const offlineForm = await get(form.id, formsStore);
-    return offlineForm != undefined;
   }
 
   render() {
     return html`
+      <h2>Forms</h2>
+      ${this.offline 
+        ? "Only available when online"
+        :html`<ul>
+          ${this.forms.map(form => 
+            this.renderForm(form))}
+        </ul>`
+      }
+      
+      <h2>Incomplete inspections</h2>
       <ul>
-        ${this.forms.map(form => 
-          this.renderForm(form))}
+      ${this.inspections.map(id => {
+        return html`<li>
+          <a href="inspection/${id}">${id}</a>
+          <button @click=${() => this.removeInspection(id)}>X</button>
+          ${this.offline ? '' : html`<button @click=${() => window.alert("Not yet implemented")}>Submit</button>`}
+        </li>`;
+      })}
       </ul>
-      ${this.offline ? "Additional forms may be available online": ""}
     `;
+  }
+  
+  async removeInspection(id: string) {
+    let inspection : any = await get(id, inspectionsStore);
+    await del(id, inspectionsStore);
+    this.inspections = this.inspections.filter(value => value != id);
+
+    if (inspection.images) {
+      Object.values(inspection.images).forEach((imageId : any) => {
+        del(imageId, imagesStore);
+      });
+    }
   }
 
   renderForm(form : FormInfo) {
     return html`<li>
-        <a href='form/${form.id}'>${form.name}</a>
-        ${asyncIf(this.availableOffline(form),
-          html`Available offline <button @click=${() => this.purgeOffline(form)}>Purge</button>`,
-          html`<button @click=${() => this.loadOffline(form)}>Load for offline</button>`,
-          "Checking offline availability")}
+        ${form.name} <button @click=${() => this.startInspection(form)}>Start inspection</button>
       </li>`;
   }
 
-  async purgeOffline(form: FormInfo) {
-    await del(form.id, formsStore);
-
-    if (this.offline) {
-      this.forms = this.forms.filter(value => value != form);
-    } else {
-      this.requestUpdate();
-    }
-  }
-
-  async loadOffline(form : FormInfo) {
-    const formData = await formsEndpoint.getForm(form.id);
-    await set(form.id, formData, formsStore);
-    this.requestUpdate();
+  async startInspection(form : FormInfo) {
+    const fullForm = await formsEndpoint.getForm(form.id);
+    const id = uuidv4();
+    await set(id, fullForm, inspectionsStore);
+    Router.go(`inspection/${id}`);
   }
 }

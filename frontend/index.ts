@@ -1,6 +1,6 @@
 import { Router } from "@vaadin/router";
 import "./global-styles";
-import "./views/form/form-view";
+import "./views/form/inspection-view";
 import "./views/form/form-list";
 
 const routes = [
@@ -8,8 +8,8 @@ const routes = [
     path: "",
     component: "form-list",
   }, {
-    path: "form/:id",
-    component: "form-view",
+    path: "inspection/:id",
+    component: "inspection-view",
   }
 ];
 

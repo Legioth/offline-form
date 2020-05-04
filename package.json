@@ -5,6 +5,7 @@
     "@polymer/iron-icon": "3.0.1",
     "@polymer/iron-list": "3.0.2",
     "@polymer/polymer": "3.2.0",
+    "@types/uuid": "^7.0.3",
     "@vaadin/flow-frontend": "./target/flow-frontend",
     "@vaadin/router": "^1.6.0",
     "@vaadin/vaadin-accordion": "1.0.1",
@@ -47,7 +48,8 @@
     "@vaadin/vaadin-upload": "4.2.2",
     "idb-keyval": "^3.2.0",
     "lit-element": "^2.2.1",
-    "promise-file-reader": "^1.0.2"
+    "promise-file-reader": "^1.0.2",
+    "uuid": "^8.0.0"
   },
   "devDependencies": {
     "awesome-typescript-loader": "5.2.1",
@@ -129,6 +131,6 @@
       "terser": "4.6.7",
       "progress-webpack-plugin": "0.0.24"
     },
-    "hash": "a45d9f37152f7a6ea1b78500eeaefb582918f8d888873e749dbce6e4f34b250a"
+    "hash": "67f1626349e2dc53da3ba31c4c48376979fcb086cb8a2171f88c3bf3468bcb79"
   }
 }
