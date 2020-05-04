@@ -57,7 +57,7 @@ module.exports = merge(flowDefaults, {
       clientsClaim: true,
       runtimeCaching: [
         {
-          urlPattern: "/",
+          urlPattern: /.*/,
           handler: "NetworkFirst",
         },
       ],
