@@ -3,6 +3,7 @@ package org.vaadin.artur.offlineform;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -98,7 +99,7 @@ public class FormsEndpoint {
         }
     }
 
-    public Map<Integer, Form> forms = new HashMap<>();
+    public Map<Integer, Form> forms = new LinkedHashMap<>();
 
     public FormsEndpoint() {
         Map<String, List<String>> form1Options = new HashMap<>();
