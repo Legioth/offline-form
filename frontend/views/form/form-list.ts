@@ -4,7 +4,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 import * as formsEndpoint from "../../generated/FormsEndpoint";
 import FormInfo from "../../generated/org/vaadin/artur/offlineform/FormsEndpoint/FormInfo";
-import { Router } from "@vaadin/router";
+
+import { navigate } from "./../../index";
 
 const inspectionsStore = new Store('inspections');
 const imagesStore = new Store('images');
@@ -63,13 +64,20 @@ export class FormList extends LitElement {
       <ul>
       ${this.inspections.map(id => {
         return html`<li>
-          <a href="inspection/${id}">${id}</a>
+          <a href="?inspection=${id}" @click=${this.handleClick}>${id}</a>
           <button @click=${() => this.removeInspection(id)}>X</button>
           ${this.offline ? '' : html`<button @click=${() => window.alert("Not yet implemented")}>Submit</button>`}
         </li>`;
       })}
       </ul>
     `;
+  }
+
+  handleClick(event : MouseEvent) {
+    let href = (event.target as HTMLAnchorElement).href;
+    window.history.pushState(null, "", href);
+    navigate();
+    event.preventDefault();
   }
   
   async removeInspection(id: string) {
@@ -94,6 +102,7 @@ export class FormList extends LitElement {
     const fullForm = await formsEndpoint.getForm(form.id);
     const id = uuidv4();
     await set(id, fullForm, inspectionsStore);
-    Router.go(`inspection/${id}`);
+    window.history.pushState(null, "", `?inspection=${id}`);
+    navigate();
   }
 }
