@@ -13,7 +13,6 @@ import "@vaadin/vaadin-radio-button/vaadin-radio-group";
 import Form from "../../generated/org/vaadin/artur/offlineform/FormsEndpoint/Form";
 import Field from "../../generated/org/vaadin/artur/offlineform/FormsEndpoint/Field";
 
-import { bigImage, smallImage } from "./image";
 import { v4 as uuidv4 } from 'uuid';
 
 const inspectionsStore = new Store('inspections');
@@ -103,8 +102,8 @@ export class InspectionView extends LitElement {
               && this.inspection.values[field.id] === undefined) {
             populateDummyRendered = true;
             dummyPopulateButton = html`
-              <button @click=${() => this.fillDummy(smallImage, true)}>Fill in dummy values (small images)</button>
-              <button @click=${() => this.fillDummy(bigImage, false)}>Fill in dummy values (huuuge images)</button>
+              <button @click=${() => this.fillDummy("base_small.jpg", true)}>Fill in dummy values (small images)</button>
+              <button @click=${() => this.fillDummy("base_big.jpg", false)}>Fill in dummy values (huuuge images)</button>
             <br>`
           }
           return  html`
