@@ -185,7 +185,9 @@ export class InspectionView extends LitElement {
 
       let start = performance.now();
       
-      let canvas = new OffscreenCanvas(baseImage.width, baseImage.height);
+      let canvas = document.createElement("canvas")
+      canvas.height = baseImage.height;
+      canvas.width = baseImage.width;
       let context = canvas.getContext("2d")!;
 
       context.drawImage(baseImage, 0, 0);
@@ -195,10 +197,7 @@ export class InspectionView extends LitElement {
       context.font = `${textHeight}px sans-serif`
       context.fillText(field.name, 0, textHeight);
 
-      let blob = await canvas.convertToBlob();
-      let image = await readAsDataURL(blob);
-      
-      //let image = canvas1.toDataURL("image/png");
+      let image = canvas.toDataURL("image/png");
 
       await this.setImage(field.id, image, expand);
 
